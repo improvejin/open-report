@@ -4,7 +4,7 @@
 // 在重新编译源模式时, 对此文件的所有修改都将丢失。
 // 生成时间: 2018.01.05 时间 06:55:15 PM CST 
 // 由oozie-workflow-0.2.xsd生成
-// oozie-workflow-0.2.xsd -p com.pplive.bip.scheduler.oozie.workflow1 -encoding utf-8
+// xjc oozie-workflow-0.2.xsd -p com.pplive.bip.scheduler.oozie.workflow1 -encoding utf-8
 
 @javax.xml.bind.annotation.XmlSchema(namespace = "uri:oozie:workflow:0.2", elementFormDefault = javax.xml.bind.annotation.XmlNsForm.QUALIFIED)
 package com.pplive.bip.scheduler.oozie.workflow;

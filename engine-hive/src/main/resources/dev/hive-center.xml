@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+	<comment>hive connection string</comment>
+	<entry key="driverClassName">org.apache.hive.jdbc.HiveDriver</entry>
+	<entry key="username">pplive</entry>
+	<entry key="password"></entry>
+	<entry key="url">jdbc:hive2://namenode-active.pplive.cn:10000/default;user=pplive</entry>
+</properties>

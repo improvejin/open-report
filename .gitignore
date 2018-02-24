@@ -1,0 +1,11 @@
+classes
+target
+*.iml
+.idea
+*.pyc
+*.project
+*.classpath
+*.rar
+*.log
+.settings
+.arc

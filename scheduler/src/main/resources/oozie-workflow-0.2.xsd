@@ -1,0 +1,375 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one
+  or more contributor license agreements.  See the NOTICE file
+  distributed with this work for additional information
+  regarding copyright ownership.  The ASF licenses this file
+  to you under the Apache License, Version 2.0 (the
+  "License"); you may not use this file except in compliance
+  with the License.  You may obtain a copy of the License at
+  
+       http://www.apache.org/licenses/LICENSE-2.0
+  
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:workflow="uri:oozie:workflow:0.2"
+           elementFormDefault="qualified" targetNamespace="uri:oozie:workflow:0.2">
+
+    <xs:element name="workflow-app" type="workflow:WorkflowApp"/>
+
+    <xs:simpleType name="Identifier">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="([a-zA-Z_]([\-_a-zA-Z0-9])*){1,39}"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="WorkflowApp">
+        <xs:sequence>
+            <xs:element name="start" type="workflow:Start" minOccurs="1" maxOccurs="1"/>
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+                <xs:element name="decision" type="workflow:Decision" minOccurs="1" maxOccurs="1"/>
+                <xs:element name="fork" type="workflow:Fork" minOccurs="1" maxOccurs="1"/>
+                <xs:element name="join" type="workflow:Join" minOccurs="1" maxOccurs="1"/>
+                <xs:element name="kill" type="workflow:Kill" minOccurs="1" maxOccurs="1"/>
+                <xs:element name="action" type="workflow:Action" minOccurs="1" maxOccurs="1"/>
+            </xs:choice>
+            <xs:element name="end" type="workflow:End" minOccurs="1" maxOccurs="1"/>
+            <xs:any namespace="uri:oozie:sla:0.1" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+        <xs:attribute name="name" type="xs:string" use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="Start">
+        <xs:attribute name="to" type="workflow:Identifier" use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="End">
+        <xs:attribute name="name" type="workflow:Identifier" use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="Decision">
+        <xs:sequence>
+            <xs:element name="switch" type="workflow:Switch" minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
+        <xs:attribute name="name" type="workflow:Identifier" use="required"/>
+    </xs:complexType>
+
+    <xs:element name="switch" type="workflow:Switch"/>
+
+    <xs:complexType name="Switch">
+        <xs:sequence>
+            <xs:sequence>
+                <xs:element name="case" type="workflow:Case" minOccurs="1" maxOccurs="unbounded"/>
+                <xs:element name="default" type="workflow:Default" minOccurs="1" maxOccurs="1"/>
+            </xs:sequence>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="Case">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute name="to" type="workflow:Identifier" use="required"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="Default">
+        <xs:attribute name="to" type="workflow:Identifier" use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="ForkTransition">
+        <xs:attribute name="start" type="workflow:Identifier" use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="Fork">
+        <xs:sequence>
+            <xs:element name="path" type="workflow:ForkTransition" minOccurs="2" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="name" type="workflow:Identifier" use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="Join">
+        <xs:attribute name="name" type="workflow:Identifier" use="required"/>
+        <xs:attribute name="to" type="workflow:Identifier" use="required"/>
+    </xs:complexType>
+
+    <xs:element name="kill" type="workflow:Kill"/>
+
+    <xs:complexType name="Kill">
+        <xs:sequence>
+            <xs:element name="message" type="xs:string" minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
+        <xs:attribute name="name" type="workflow:Identifier" use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="ActionTransition">
+        <xs:attribute name="to" type="workflow:Identifier" use="required"/>
+    </xs:complexType>
+
+    <xs:element name="map-reduce" type="workflow:MapReduce"/>
+    <xs:element name="pig" type="workflow:Pig"/>
+    <xs:element name="sub-workflow" type="workflow:SubWorkflow"/>
+    <xs:element name="fs" type="workflow:Fs"/>
+    <xs:element name="java" type="workflow:Java"/>
+    <xs:element name="hive" type="workflow:Hive"/>
+    <xs:element name="distcp" type="workflow:Distcp"/>
+    <xs:element name="email" type="workflow:Email"/>
+    <xs:element name="shell" type="workflow:Shell"/>
+    <xs:element name="spark" type="workflow:Spark"/>
+    <xs:element name="sqoop" type="workflow:Sqoop"/>
+    <xs:element name="ssh" type="workflow:Ssh"/>
+
+    <xs:complexType name="Action">
+        <xs:sequence>
+            <xs:choice minOccurs="1" maxOccurs="1">
+                <xs:element name="map-reduce" type="workflow:MapReduce" minOccurs="1" maxOccurs="1"/>
+                <xs:element name="pig" type="workflow:Pig" minOccurs="1" maxOccurs="1"/>
+                <xs:element name="sub-workflow" type="workflow:SubWorkflow" minOccurs="1" maxOccurs="1"/>
+                <xs:element name="fs" type="workflow:Fs" minOccurs="1" maxOccurs="1"/>
+                <xs:element name="java" type="workflow:Java" minOccurs="1" maxOccurs="1"/>
+                <xs:element name="hive" type="workflow:Hive" minOccurs="1" maxOccurs="1"/>
+                <xs:element name="distcp" type="workflow:Distcp" minOccurs="1" maxOccurs="1"/>
+                <xs:element name="email" type="workflow:Email" minOccurs="1" maxOccurs="1"/>
+                <xs:element name="shell" type="workflow:Shell" minOccurs="1" maxOccurs="1"/>
+                <xs:element name="spark" type="workflow:Spark" minOccurs="1" maxOccurs="1"/>
+                <xs:element name="sqoop" type="workflow:Sqoop" minOccurs="1" maxOccurs="1"/>
+                <xs:element name="ssh" type="workflow:Ssh" minOccurs="1" maxOccurs="1"/>
+                <xs:any namespace="##other" minOccurs="1" maxOccurs="1"/>
+            </xs:choice>
+            <xs:element name="ok" type="workflow:ActionTransition" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="error" type="workflow:ActionTransition" minOccurs="1" maxOccurs="1"/>
+            <!--<xs:any namespace="uri:oozie:sla:0.1" minOccurs="0" maxOccurs="1"/>-->
+        </xs:sequence>
+        <xs:attribute name="name" type="workflow:Identifier" use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="MapReduce">
+        <xs:sequence>
+            <xs:element name="job-tracker" type="xs:string" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="name-node" type="xs:string" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="prepare" type="workflow:Prepare" minOccurs="0" maxOccurs="1"/>
+            <xs:choice minOccurs="0" maxOccurs="1">
+                <xs:element name="streaming" type="workflow:Streaming" minOccurs="0" maxOccurs="1"/>
+                <xs:element name="pipes" type="workflow:Pipes" minOccurs="0" maxOccurs="1"/>
+            </xs:choice>
+            <xs:element name="job-xml" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="configuration" type="workflow:Configuration" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="file" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="archive" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="Pig">
+        <xs:sequence>
+            <xs:element name="job-tracker" type="xs:string" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="name-node" type="xs:string" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="prepare" type="workflow:Prepare" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="job-xml" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="Configuration" type="workflow:Configuration" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="script" type="xs:string" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="param" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="argument" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="file" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="archive" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="SubWorkflow">
+        <xs:sequence>
+            <xs:element name="app-path" type="xs:string" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="propagate-Configuration" type="workflow:Flag" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="Configuration" type="workflow:Configuration" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="Fs">
+	<xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="delete" type="workflow:Delete"/>
+            <xs:element name="mkdir" type="workflow:Mkdir"/>
+            <xs:element name="move" type="workflow:Move"/>
+            <xs:element name="chmod" type="workflow:Chmod"/>
+        </xs:choice>
+    </xs:complexType>
+
+    <xs:complexType name="Java">
+        <xs:sequence>
+            <xs:element name="job-tracker" type="xs:string" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="name-node" type="xs:string" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="prepare" type="workflow:Prepare" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="job-xml" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="configuration" type="workflow:Configuration" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="main-class" type="xs:string" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="java-opts" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="arg" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="file" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="archive" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="capture-output" type="workflow:Flag" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="Hive">
+        <xs:sequence>
+            <xs:element name="job-tracker" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="name-node" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="prepare" type="workflow:Prepare" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="job-xml" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="configuration" type="workflow:Configuration" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="script" type="xs:string" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="param" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="argument" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="file" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="archive" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="Distcp">
+        <xs:sequence>
+            <xs:element name="job-tracker" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="name-node" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="prepare" type="workflow:Prepare" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="configuration" type="workflow:Configuration" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="java-opts" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="arg" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="Email">
+        <xs:sequence>
+            <xs:element name="to" type="xs:string" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="cc" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="subject" type="xs:string" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="body" type="xs:string" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="content_type" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="attachment" type="xs:string" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="Sqoop">
+        <xs:sequence>
+            <xs:element name="job-tracker" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="name-node" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="prepare" type="workflow:Prepare" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="job-xml" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="configuration" type="workflow:Configuration" minOccurs="0" maxOccurs="1"/>
+            <xs:choice>
+                <xs:element name="command" type="xs:string" minOccurs="1" maxOccurs="1"/>
+                <xs:element name="arg" type="xs:string" minOccurs="1" maxOccurs="unbounded"/>
+            </xs:choice>
+            <xs:element name="file" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="archive" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="Ssh">
+        <xs:sequence>
+            <xs:element name="host" type="xs:string" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="command" type="xs:string" minOccurs="1" maxOccurs="1"/>
+            <xs:choice>
+                <xs:element name="args" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+                <xs:element name="arg" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:choice>
+            <xs:element name="capture-output" type="workflow:Flag" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="Spark">
+        <xs:sequence>
+            <xs:element name="job-tracker" type="xs:string" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="name-node" type="xs:string" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="prepare" type="workflow:Prepare" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="job-xml" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="configuration" type="workflow:Configuration" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="master" type="xs:string" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="mode" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="name" type="xs:string" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="class" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="jar" type="xs:string" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="spark-opts" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="arg" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="Shell">
+        <xs:sequence>
+            <xs:element name="job-tracker" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="name-node" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="prepare" type="workflow:Prepare" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="job-xml" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="configuration" type="workflow:Configuration" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="exec" type="xs:string" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="argument" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="env-var" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="file" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="archive" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="capture-output" type="workflow:Flag" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="Flag"/>
+
+    <xs:complexType name="Configuration">
+        <xs:sequence>
+            <xs:element name="property" minOccurs="1" maxOccurs="unbounded">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="name" minOccurs="1" maxOccurs="1" type="xs:string"/>
+                        <xs:element name="value" minOccurs="1" maxOccurs="1" type="xs:string"/>
+                        <xs:element name="description" minOccurs="0" maxOccurs="1" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="Streaming">
+        <xs:sequence>
+            <xs:element name="mapper" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="reducer" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="record-reader" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="record-reader-mapping" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="env" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="Pipes">
+        <xs:sequence>
+            <xs:element name="map" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="reduce" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="inputformat" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="partitioner" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="writer" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="program" type="xs:string" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="Prepare">
+        <xs:sequence>
+            <xs:element name="delete" type="workflow:Delete" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="mkdir" type="workflow:Mkdir" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="Delete">
+        <xs:attribute name="path" type="xs:string" use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="Mkdir">
+        <xs:attribute name="path" type="xs:string" use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="Move">
+        <xs:attribute name="source" type="xs:string" use="required"/>
+        <xs:attribute name="target" type="xs:string" use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="Chmod">
+        <xs:attribute name="path" type="xs:string" use="required"/>
+        <xs:attribute name="permissions" type="xs:string" use="required"/>
+        <xs:attribute name="dir-files" type="xs:string"/>
+    </xs:complexType>
+
+</xs:schema>

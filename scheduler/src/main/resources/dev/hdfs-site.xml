@@ -20,23 +20,23 @@
   </property>
   <property>
     <name>dfs.namenode.rpc-address.dev-cluster.nn1</name>
-    <value>namenode-active.pplive.cn:9000</value>
+    <value>namenode-active.pplove.cn:9000</value>
   </property>
   <property>
     <name>dfs.namenode.rpc-address.dev-cluster.nn2</name>
-    <value>namenode-standby.pplive.cn:9000</value>
+    <value>namenode-standby.pplove.cn:9000</value>
   </property>
   <property>
     <name>dfs.namenode.http-address.dev-cluster.nn1</name>
-    <value>namenode-active.pplive.cn:50070</value>
+    <value>namenode-active.pplove.cn:50070</value>
   </property>
   <property>
     <name>dfs.namenode.http-address.dev-cluster.nn2</name>
-    <value>namenode-standby.pplive.cn:50070</value>
+    <value>namenode-standby.pplove.cn:50070</value>
   </property>
   <property>
     <name>dfs.namenode.shared.edits.dir</name>
-    <value>qjournal://namenode-active.pplive.cn:8485;namenode-standby.pplive.cn:8485;datanode-1.pplive.cn:8485/dev-cluster</value>
+    <value>qjournal://namenode-active.pplove.cn:8485;namenode-standby.pplove.cn:8485;datanode-1.pplove.cn:8485/dev-cluster</value>
   </property>
   <property>
     <name>dfs.client.failover.proxy.provider.dev-cluster</name>
@@ -44,11 +44,11 @@
   </property>
   <property>
     <name>dfs.ha.fencing.methods</name>
-    <value>sshfence(pplive:2200)</value>
+    <value>sshfence(pplove:2200)</value>
   </property>
   <property>
     <name>dfs.ha.fencing.ssh.private-key-files</name>
-    <value>/home/pplive/.ssh/id_rsa</value>
+    <value>/home/pplove/.ssh/id_rsa</value>
   </property>
   <property>
     <name>dfs.journalnode.edits.dir</name>
@@ -64,15 +64,15 @@
   </property>
   <property>
     <name>dfs.namenode.name.dir</name>
-    <value>file:///home/pplive/hard_disk/4/name</value>
+    <value>file:///home/pplove/hard_disk/4/name</value>
   </property>
   <property>
     <name>dfs.namenode.secondary.http-address</name>
-    <value>datanode-1.pplive.cn:50090</value>
+    <value>datanode-1.pplove.cn:50090</value>
   </property>
   <property>
     <name>dfs.datanode.data.dir</name>
-    <value>/home/pplive/hard_disk/4/data</value>
+    <value>/home/pplove/hard_disk/4/data</value>
   </property>
   <property>
     <name>dfs.permissions.enabled</name>

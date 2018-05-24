@@ -3,7 +3,7 @@
 <properties>
 	<comment>hive connection string</comment>
 	<entry key="driverClassName">org.apache.hive.jdbc.HiveDriver</entry>
-	<entry key="username">pplive</entry>
+	<entry key="username">pplove</entry>
 	<entry key="password"></entry>
-	<entry key="url">jdbc:hive2://namenode-active.pplive.cn:10000/default;user=pplive</entry>
+	<entry key="url">jdbc:hive2://namenode-active.pplove.cn:10000/default;user=pplove</entry>
 </properties>
